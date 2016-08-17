@@ -16,7 +16,7 @@ class Provider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase($this->baseUrl . '/api/oauth2/auth', $state);
+        return $this->buildAuthUrlFromBase($this->getBaseUrl() . '/api/oauth2/auth', $state);
     }
 
     /**
@@ -32,7 +32,7 @@ class Provider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get($this->baseUrl . '/api/v1/current/Me', [
+        $response = $this->getHttpClient()->get($this->getBaseUrl(). '/api/v1/current/Me', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $token,
                 'content-type'  => 'application/json',
@@ -67,4 +67,21 @@ class Provider extends AbstractProvider implements ProviderInterface
             'grant_type' => 'authorization_code',
         ]);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBaseUrl()
+    {
+        return $this->getConfig('base_url', 'https://start.exactonline.nl');
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public static function additionalConfigKeys()
+    {
+        return ['base_url'];
+    }
+
+
 }
